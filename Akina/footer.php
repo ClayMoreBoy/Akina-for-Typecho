@@ -4,6 +4,14 @@
 	<div id="footer" class="site-info">Copyright © <?php echo date("Y");?> by <a href="<?php $this->options ->siteUrl(); ?>" target="_blank" rel="nofollow"><?php $this->options->title() ?></a> . All rights reserved.<span class="sep"> | </span>Theme: <a href="https://zhebk.cn/Web/Akina.html" target="_blank" rel="nofollow">Akina For Typecho</a>.
 		<div class="footertext">
 			<p><a href="http://www.beian.miit.gov.cn/" target="_blank" rel="nofollow"><?php $this->options->ICP();?></a></p>
+			<?php if ($this->options->gongan){
+			    echo '
+			    <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode='.gonganbeian($this->options->gongan).'" style="display:inline-block;" rel="nofollow noopener noreferrer">
+			    <img src="'.theurl.'images/gongan.png" style="float:left;">
+			    <p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px;">'.$this->options->gongan.'</p>
+			    </a>
+			    ';
+			}?>
 		</div>
 	</div>
 </footer>
@@ -51,10 +59,6 @@
 	if (!!window.ActiveXObject || "ActiveXObject" in window) { //is IE?
 	  alert('请抛弃万恶的IE系列浏览器吧。');
 	}
-	var isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-	if(!isMac){
-		document.write('<script src="' + theurl + 'js/SmoothScroll.js"></' + 'script>');
-	}
 	//判断下拉加载
 	<?php if (!empty($this->options->menu) && in_array('xl', $this->options->menu)): ?>var xl = "1";<?php else: ?> var xl = "0";<?php endif; ?>
 </script>
@@ -65,6 +69,7 @@
 <script type="text/javascript" src="'.theurl.'js/baguetteBox.min.js"></script>
 <script type="text/javascript" src="'.theurl.'js/global.js"></script>
 <script type="text/javascript" src="'.theurl.'js/prism.js"></script>
+<script type="text/javascript" src="'.theurl.'js/SmoothScroll.js"></script>
 ';?>
 <?php $this->footer(); ?>
 </body>
