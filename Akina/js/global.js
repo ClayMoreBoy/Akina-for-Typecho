@@ -228,9 +228,16 @@ var clickEvent = function(){
     $(".smilies-box").fadeToggle("fast");
   });
 
-//comment-author-info-toggle akina-1.05
-$("#toggle-comment-info").click(function(){
-    $("#comment-author-info").slideToggle("slow");
+//评论者信息 显示/隐藏
+$("#toggle-comment-info").click(function click_comment_info(){
+    var comment_info = $("#toggle-comment-info");
+    var author_info = $("#comment-author-info");
+    if(author_info.css("display") == "none"){
+        comment_info.html("[ 隐藏 ] ↑");
+    }else{
+        comment_info.html("[ 修改 ] ↓");
+    }
+    author_info.slideToggle("slow");
   });
 
 //打赏 8.15
@@ -350,4 +357,27 @@ $(document).ready(function(){
 	$("a[href*='://']:not(a[href^='"+document.location.protocol+"//"+document.location.host+"'],a[href^='javascript:'])").attr({target:"_blank",rel:"nofollow noopener noreferrer"});
 	$(".links a[href*='://']").removeAttr("rel");
 });
+//窗口提示
+function Fytx_Tips() {
+    var _this = this;
+    _this.Fytx_alert = function(obj) {
+        if ($("div").is(".fytx_alert_background")) $('.fytx_alert_background').remove();
+        var _fytx_alert_background = '<div class="fytx_alert_background"><div class="fytx_alert_box">' + '<div class="fytx_alert_title">' + obj.title + '</div>' + '<div class="fytx_alert_message">' + obj.message + '</div>' + '<span class="fytx_alert_btn">知道了</span>' + '</div></div>';
+        $('body').append(_fytx_alert_background);
+    }
+}
+$(document).ready(function() {
+    var Fytx = new Fytx_Tips();
+    $.alert = function(title, msg) {
+        Fytx.Fytx_alert({
+            title: title,
+            message: msg
+        })
+    },
+    $("body").on("click", ".fytx_alert_btn",
+    function() {
+        $(".fytx_alert_background").hide();
+    });
+});
+//版本显示
 console.log("%cAkina for Typecho 3.3.1","background:#ff6d6d;color:#fff;margin:10px;padding:6px;","https://zhebk.cn");
