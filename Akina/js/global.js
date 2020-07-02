@@ -14,26 +14,43 @@ var ajaxcomments = function(){
 	   new_id = '', parent_id = '';
 
 	click_bind();
-    
-    $(comment_form).submit(function() { // 提交
+    /* 开始提交 */
+    $(comment_form).submit(function() {
 		/* 初始化评论框 */
 		$('.comment-respond textarea').css({"border":"2px  solid #DDE6EA"});
 		$('.commenttext').css({"border":"2px  solid #DDE6EA"});
-		/* 加载提示 */
 		$("#submit").val("提交中...");
-
-       /* 预检 */
-        var textValue = $(comment_form).find(textarea).html().replace(/(^\s*)|(\s*$)/g, "");//检查空格信息
-        var textValuex = $(comment_form).find(textarea).val().replace(/(^\s*)|(\s*$)/g, "");//检查空格信息
-
-        if (textValue == null || textValue == "") {
-			if(textValuex == null || textValuex == ""){
-				$('.comment-respond textarea').css({"border":"2px dashed #ff6c6c"});
-              	$("#submit").val("再次提交");
-				return false;
-			}
+		/*格式整理*/
+		var authorValue = $('#author').val().replace(/(^\s*)|(\s*$)/g, "");
+		var mailValue = $('#mail').val().replace(/(^\s*)|(\s*$)/g, "");
+		var urlValue = $('#url').val().replace(/(^\s*)|(\s*$)/g, "");
+		var textValue = $(comment_form).find(textarea).val().replace(/(^\s*)|(\s*$)/g, "");
+		/* 预检 */
+		var errorNum = 0;
+		if(authorValue == ""){
+		    errorNum++;
+			$('#author').css({"border":"2px dashed #ff6c6c"});
 		}
-		
+		if(mailValue == ""){
+		    errorNum++;
+			$('#mail').css({"border":"2px dashed #ff6c6c"});
+		}
+		if(urlValue != ""){
+		    if(urlValue.indexOf('https://') == -1 && urlValue.indexOf('http://') == -1){
+		        errorNum++;
+    			$('#url').css({"border":"2px dashed #ff6c6c"});
+		}
+		}
+		if(textValue == ""){
+		    errorNum++;
+			$('.comment-respond textarea').css({"border":"2px dashed #ff6c6c"});
+		}
+		if(errorNum != 0){
+		    $("#comment-author-info").show();
+		    $("#toggle-comment-info").html("[ 隐藏 ] ↑");
+		    setTimeout(function(){ $("#submit").val("再次提交"); }, 500);
+		    return false;
+		}
         $.ajax({
             url: $(this).attr('action'),
             type: $(this).attr('method'),
@@ -45,9 +62,12 @@ var ajaxcomments = function(){
             success: function(data) { //成功取到数据
                 try {
                     if (!$(comment_list, data).length) {
-						$("#comment-author-info").show();
-                        $('.commenttext').css({"border":"2px dashed #ff6c6c"});
-						$("#submit").val("再次提交");
+                        $("#comment-author-info").show();
+                        var msg =$(data)[7].innerHTML.replace(/\s*/g,"");
+                        $(document).ready(function(){
+                            $.alert("提示",msg);
+                        });
+                        setTimeout(function(){ $("#submit").val("再次提交"); }, 500);
                         return false;
                     } else {
                         new_id = $(comment_list, data).html().match(/id=\"?comment-\d+/g).join().match(/\d+/g).sort(function(a, b) {
